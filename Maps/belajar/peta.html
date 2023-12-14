@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peta Dunia dengan Marker</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+  <!-- Custom CSS -->
+  <style>
+    #map {
+      height: 400px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-md-12">
+        <h2 class="mb-4">Peta Dunia dengan Marker</h2>
+        <div id="map"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      // Ambil data JSON
+      fetch('datajson.php')
+        .then(response => response.json())
+        .then(data => { 
+          // Inisialisasi peta
+          var map = L.map('map').setView([0, 0], 2);
+
+          // Tambahkan peta OpenStreetMap
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+          }).addTo(map);
+
+          // Tambahkan marker untuk setiap negara
+          data.forEach(country => {
+            var marker = L.marker(country.koordinat).addTo(map);
+            marker.bindPopup(`<b>${country.nm_negara}</b><br>Ibukota: ${country.kode_negara}<br>Volume: ${country.volume} kg`);
+          });
+        })
+        .catch(error => console.error('Error:', error));
+    });
+  </script>
+
+</body>
+</html>
